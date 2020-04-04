@@ -13,6 +13,11 @@ import Brick.Widgets.Border
 import qualified Brick.Widgets.Center as C
 import qualified Data.Text as T 
 
+import Lexer
+import Parser
+
+buildType = parse . scan
+
 type Info = (String, String)
 
 data State = Init | Results String [Info] Int
