@@ -4,9 +4,10 @@ OpenBook is a command line application to assist with open book exams.
 ## Install
 You will need to have cabal and GHC installed. You simply navigate to the clones directory and simply type
 ```
-cabal v2-install
+cabal v2-build
+./copyExec.sh [Install dir]
 ```
-make sure the cabal bin dir is in your path! I have no idea if it works on Windows.
+The script will not work on windows
 
 ## Usage
 When it is completed, you will simply run `OpenBook [filename]` where the file is
