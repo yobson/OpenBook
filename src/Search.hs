@@ -11,13 +11,13 @@ getIName, getIData :: Info -> String
 getIName = fst . eTitle
 getIData i = concat [printSegment "" (eTitle i)
                     , concatMap (printSegment "Definition") (eDef i)
-                    , concatMap (printSegment "Equation")   (eDef i)
+                    , concatMap (printSegment "Equation")   (eEqn i)
                     , concatMap (printSegment "See also")   (eIs i)
                     , concatMap (printSegment "Related")   (eRel i)
                     ]
 
 printSegment :: String -> (String, String) -> String
-printSegment title (h,b) = concat ["# ", title, ": ", h, "\n", b, "\n\n"]
+printSegment title (h,b) = concat ["# ", title, if title == "" then "" else ": ", h, "\n", b, "\n\n"]
 
 data RankPred a = Pred (a -> Bool) | (RankPred a) :|: (RankPred a) | Not (RankPred a)
 
