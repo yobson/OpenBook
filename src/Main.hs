@@ -56,7 +56,7 @@ chooseCursor = neverShowCursor
 handleEvent  :: [Info] -> State -> BrickEvent () e -> EventM () (Next State)
 handleEvent entries s@(Init) (VtyEvent e) = case e of
                               V.EvKey V.KEsc      [] -> halt s
-                              V.EvKey (V.KChar c) [] -> continue (Results [c] [] 0)
+                              V.EvKey (V.KChar c) [] -> continue (Results [c] (getResults entries [c]) 0)
                               _                      -> continue s
 handleEvent entries s@(Results search r sel) (VtyEvent e) = case e of
                               V.EvKey V.KEsc      [] -> halt s
