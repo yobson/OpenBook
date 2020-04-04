@@ -1,6 +1,9 @@
+{-# LANGUAGE FlexibleInstances #-}
+
 module Search (getResults, getIName, getIData, Info) where
 
 import Parser (Entry(..))
+import Data.Char (toUpper)
 
 type Info = Entry
 
@@ -27,15 +30,24 @@ filterRanked (f :|: g) xs       = filterRanked f xs ++ filterRanked g (filterRan
 
 buildPreds = foldr1 (\x xs -> x :|: xs) . map Pred
 
+class EqIsh a where
+  (===) :: a -> a -> Bool
+  
+instance EqIsh Char where
+  a === b = (toUpper a) == (toUpper b)
+
+instance EqIsh String where
+  a === b = foldr (&&) True (zipWith (===) a b)
+
 beginsWith :: String -> String -> Bool
 beginsWith _ [] = True
 beginsWith [] _ = True
-beginsWith (x:xs) (y:ys) = x == y && beginsWith xs ys
+beginsWith (x:xs) (y:ys) = x === y && beginsWith xs ys
 
 contains :: String -> String -> Bool
 contains [] _ = False
 contains _ [] = False
-contains (x:xs) (y:ys) | x == y    = beginsWith xs ys || contains (x:xs) ys
+contains (x:xs) (y:ys) | x === y    = beginsWith xs ys || contains (x:xs) ys
                        | otherwise = contains (x:xs) ys
  
 
@@ -45,6 +57,8 @@ findRelated xs (Entry t d e i r) = Entry t d e i (map out $ filter (\y -> (fst $
         buildTriple info = map (\(x,y) -> (fst $ eTitle info, x, y)) (eIs info)
         mid (a,b,c) = b
         out (a,b,c) = (a,c)
+
+
 
 
 getResults :: [Info] -> String -> [Info]
