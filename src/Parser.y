@@ -50,6 +50,7 @@ data Entry = Entry { eTitle :: (String,String)
                    , eDef :: [(String, String)]
                    , eEqn :: [(String, String)]
                    , eIs  :: [(String,String)]
+                   , eRel :: [(String, String)]
                    } deriving (Show)
 
 data PreEntry = PETitle String String
@@ -60,12 +61,12 @@ data PreEntry = PETitle String String
 
 construct :: [PreEntry] -> Entry -> Entry
 construct [] e                                 = e
-construct ((PETitle s1 s2):xs) (Entry t d e i) = construct xs (Entry (s1,s2) d e i)
-construct ((PEDef   s1 s2):xs) (Entry t d e i) = construct xs (Entry t ((s1,s2):d) e i)
-construct ((PEEqn   s1 s2):xs) (Entry t d e i) = construct xs (Entry t d ((s1,s2):e) i)
-construct ((PEIs    s1 s2):xs) (Entry t d e i) = construct xs (Entry t d e ((s1,s2):i))
+construct ((PETitle s1 s2):xs) (Entry t d e i r) = construct xs (Entry (s1,s2) d e i r)
+construct ((PEDef   s1 s2):xs) (Entry t d e i r) = construct xs (Entry t ((s1,s2):d) e i r)
+construct ((PEEqn   s1 s2):xs) (Entry t d e i r) = construct xs (Entry t d ((s1,s2):e) i r)
+construct ((PEIs    s1 s2):xs) (Entry t d e i r) = construct xs (Entry t d e ((s1,s2):i) r)
 
-emp = Entry ("","") [] [] []
+emp = Entry ("","") [] [] [] []
 
 parse = map (flip construct emp) . parser
 }

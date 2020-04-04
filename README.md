@@ -59,4 +59,4 @@ result x k = k x
 As you can see, not much has been implemented yet
 - [X] Build UI
 - [X] Design file format and parser for text
-- [ ] Implement search utility
+- [X] Implement search utility
