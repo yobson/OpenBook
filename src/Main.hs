@@ -17,7 +17,7 @@ type Info = (String, String)
 
 data State = Init | Results String [Info] Int
 
-keywords = ["def", "eqn", "opt"]
+keywords = ["def", "eqn", "opt", "txt", "reg"]
 
 getIName, getIData :: Info -> String
 getIName = fst
