@@ -56,7 +56,6 @@ result x k = k x
 ```
 
 ## TODO List
-As you can see, not much has been implemented yet
 - [X] Build UI
 - [X] Design file format and parser for text
 - [X] Implement search utility
