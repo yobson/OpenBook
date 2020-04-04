@@ -16,20 +16,16 @@ import System.Environment
 
 import Lexer
 import Parser
+import Search
 
-
-type Info = Entry
 
 data State = Init | Results String [Info] Int
 
 keywords = ["def", "eqn", "opt", "txt", "reg"]
 
-getIName, getIData :: Info -> String
-getIName = fst . eTitle
-getIData = fst . eTitle
 
-drawUI :: [Info] ->  State -> [Widget ()]
-drawUI es s = [drawTopBar s <=> (vBox [drawSelect s] <+> vBorder <+> vBox [drawResult s])]
+drawUI :: State -> [Widget ()]
+drawUI s = [drawTopBar s <=> (vBox [drawSelect s] <+> vBorder <+> vBox [drawResult s])]
 
 drawTopBar :: State -> Widget ()
 drawTopBar (Init) = str "OpenBook" <=> hBorder <=> str "█" <=> hBorder
@@ -51,22 +47,23 @@ drawSelect (Results _ res selected) = vBox $ mapSelect selected res getIName
 
 drawResult :: State -> Widget ()
 drawResult (Init) = str ""
-drawResult (Results _ res selected) = (str . getIData) $ res !! selected
+drawResult (Results _ res selected) | selected >= 0 && selected < length res = (str . getIData) $ res !! selected
+                                    | otherwise                             = str ""
 
 chooseCursor :: State -> [CursorLocation ()] -> Maybe (CursorLocation ())
 chooseCursor = neverShowCursor
 
-handleEvent  :: State -> BrickEvent () e -> EventM () (Next State)
-handleEvent s@(Init) (VtyEvent e) = case e of
+handleEvent  :: [Info] -> State -> BrickEvent () e -> EventM () (Next State)
+handleEvent entries s@(Init) (VtyEvent e) = case e of
                               V.EvKey V.KEsc      [] -> halt s
                               V.EvKey (V.KChar c) [] -> continue (Results [c] [] 0)
                               _                      -> continue s
-handleEvent s@(Results search r sel) (VtyEvent e) = case e of
+handleEvent entries s@(Results search r sel) (VtyEvent e) = case e of
                               V.EvKey V.KEsc      [] -> halt s
                               V.EvKey V.KDown     [] -> continue (Results search r (sel + 1))
                               V.EvKey V.KUp       [] -> continue (Results search r (sel - 1))
-                              V.EvKey V.KBS       [] -> if (length search > 1) then  continue (Results (init search) r 0) else continue Init
-                              V.EvKey (V.KChar c) [] -> continue (Results (search ++ [c]) r 0)
+                              V.EvKey V.KBS       [] -> if (length search > 1) then  continue (Results (init search) (getResults entries (init search)) 0) else continue Init
+                              V.EvKey (V.KChar c) [] -> let nSearch = search ++ [c] in continue (Results nSearch (getResults entries nSearch) 0)
                               _                      -> continue s
 
 startEvent :: State -> EventM () State
@@ -87,10 +84,10 @@ main :: IO ()
 main = do
   args <- getArgs
   files <- mapM readFile args
-  let entries = buildType ""
-  let app = App { appDraw         = drawUI entries
+  let entries = concatMap buildType files
+  let app = App { appDraw         = drawUI
                 , appChooseCursor = chooseCursor
-                , appHandleEvent  = handleEvent
+                , appHandleEvent  = handleEvent entries
                 , appStartEvent   = startEvent
                 , appAttrMap      = attMap
                 }

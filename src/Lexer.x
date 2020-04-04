@@ -13,7 +13,7 @@ tokens :-
   \#def\ $alpha+    { \s -> Def   $ tail $ dropWhile (/= ' ') s}
   \#eqn\ $alpha+    { \s -> Eqn   $ tail $ dropWhile (/= ' ') s}
   \#is\ $alpha+     { \s -> Is    $ tail $ dropWhile (/= ' ') s}
-  [^\#]+               { \s -> Body s }
+  [^\#]+            { \s -> Body s }
 
 {
 

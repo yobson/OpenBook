@@ -20,23 +20,26 @@ import Lexer
 Entries : Entry Entries      { $1 : $2 }
         | Entry              { [$1] }
 
-Entry  : Title Bodies        { $1 : $2 }
+Entry  : Title Infos         { $1 : $2 }
        | Title               { [$1] }
 
-Bodies : Body Bodies         { $1 : $2 }
-       | Body                { [$1] }
+Infos  : Info Infos          { $1 : $2 }
+       | Info                { [$1] }
 
-Body   : Def                 { $1 }
+Info   : Def                 { $1 }
        | Eqn                 { $1 }
        | Is                  { $1 }
 
-Title  : title body          { PETitle $1 $2 }
+Bodies : body Bodies         { concat [$1, "\n", $2] }
+       | body                { $1 }
 
-Def    : def body            { PEDef $1 $2 }
+Title  : title Bodies          { PETitle $1 $2 }
 
-Eqn    : eqn body            { PEEqn $1 $2 }
+Def    : def Bodies            { PEDef $1 $2 }
 
-Is     : is body             { PEIs $1 $2 }
+Eqn    : eqn Bodies            { PEEqn $1 $2 }
+
+Is     : is Bodies             { PEIs $1 $2 }
 
 {
 

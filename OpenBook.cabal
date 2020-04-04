@@ -18,7 +18,7 @@ extra-source-files:  CHANGELOG.md
 
 executable OpenBook
   main-is:             Main.hs
-  other-modules:       Parser, Lexer
+  other-modules:       Parser, Lexer, Search
   -- other-extensions:
   build-depends:       base ^>=4.12.0.0
                      , brick
