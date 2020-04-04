@@ -12,24 +12,24 @@ import Data.Text.Markup ((@@))
 import Brick.Widgets.Border
 import qualified Brick.Widgets.Center as C
 import qualified Data.Text as T 
+import System.Environment
 
 import Lexer
 import Parser
 
-buildType = parse . scan
 
-type Info = (String, String)
+type Info = Entry
 
 data State = Init | Results String [Info] Int
 
 keywords = ["def", "eqn", "opt", "txt", "reg"]
 
 getIName, getIData :: Info -> String
-getIName = fst
-getIData = snd
+getIName = fst . eTitle
+getIData = fst . eTitle
 
-drawUI :: State -> [Widget ()]
-drawUI s = [drawTopBar s <=> (vBox [drawSelect s] <+> vBorder <+> vBox [drawResult s])]
+drawUI :: [Info] ->  State -> [Widget ()]
+drawUI es s = [drawTopBar s <=> (vBox [drawSelect s] <+> vBorder <+> vBox [drawResult s])]
 
 drawTopBar :: State -> Widget ()
 drawTopBar (Init) = str "OpenBook" <=> hBorder <=> str "█" <=> hBorder
@@ -59,7 +59,7 @@ chooseCursor = neverShowCursor
 handleEvent  :: State -> BrickEvent () e -> EventM () (Next State)
 handleEvent s@(Init) (VtyEvent e) = case e of
                               V.EvKey V.KEsc      [] -> halt s
-                              V.EvKey (V.KChar c) [] -> continue (Results [c] [("One", "One"), ("Two", "Hello World"), ("Three", "BLA BLA BLA BLA BLA BLA BLA BLA \n BLA")] 0)
+                              V.EvKey (V.KChar c) [] -> continue (Results [c] [] 0)
                               _                      -> continue s
 handleEvent s@(Results search r sel) (VtyEvent e) = case e of
                               V.EvKey V.KEsc      [] -> halt s
@@ -81,9 +81,14 @@ theMap = attrMap V.defAttr
     , ("Selected",      fg V.red)
     ]
 
+buildType = parse . scan
+
 main :: IO ()
 main = do
-  let app = App { appDraw         = drawUI
+  args <- getArgs
+  files <- mapM readFile args
+  let entries = buildType ""
+  let app = App { appDraw         = drawUI entries
                 , appChooseCursor = chooseCursor
                 , appHandleEvent  = handleEvent
                 , appStartEvent   = startEvent

@@ -1,5 +1,5 @@
 {
-module Parser (parse, Entry) where
+module Parser (parse, Entry(..)) where
 
 import Lexer
 }
