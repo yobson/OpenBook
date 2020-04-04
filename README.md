@@ -14,7 +14,7 @@ When it is completed, you will simply run `OpenBook [filename]` where the file i
 a store of all the data you might want to look up in the exam.
 
 When the app is running, 'ESC' closes the app, type to search and arrow keys to select a hit.
-searching can be more focused with the following rules:
+searching can be more focused with the following rules (Not yet implmented):
 - Typing anything will simply search through names of the entries.
 - `def text` will search for definitions
 - `eqn text` will search for equations relating to text
@@ -60,3 +60,4 @@ result x k = k x
 - [X] Build UI
 - [X] Design file format and parser for text
 - [X] Implement search utility
+- [ ] Implement more focuses search
