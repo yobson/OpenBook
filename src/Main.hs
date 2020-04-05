@@ -60,8 +60,8 @@ handleEvent entries s@(Init) (VtyEvent e) = case e of
                               _                      -> continue s
 handleEvent entries s@(Results search r sel) (VtyEvent e) = case e of
                               V.EvKey V.KEsc      [] -> halt s
-                              V.EvKey V.KDown     [] -> continue (Results search r (sel + 1))
-                              V.EvKey V.KUp       [] -> continue (Results search r (sel - 1))
+                              V.EvKey V.KDown     [] -> let nSel = sel + 1 in continue (Results search r (if nSel >= (length r) then 0 else nSel))
+                              V.EvKey V.KUp       [] -> let nSel = sel - 1 in continue (Results search r (if nSel < 0 then length r - 1 else nSel))
                               V.EvKey V.KBS       [] -> if (length search > 1) then  continue (Results (init search) (getResults entries (init search)) 0) else continue Init
                               V.EvKey (V.KChar c) [] -> let nSearch = search ++ [c] in continue (Results nSearch (getResults entries nSearch) 0)
                               _                      -> continue s
