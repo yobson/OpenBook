@@ -62,9 +62,9 @@ data PreEntry = PETitle String String
 construct :: [PreEntry] -> Entry -> Entry
 construct [] e                                 = e
 construct ((PETitle s1 s2):xs) (Entry t d e i r) = construct xs (Entry (s1,s2) d e i r)
-construct ((PEDef   s1 s2):xs) (Entry t d e i r) = construct xs (Entry t ((s1,s2):d) e i r)
-construct ((PEEqn   s1 s2):xs) (Entry t d e i r) = construct xs (Entry t d ((s1,s2):e) i r)
-construct ((PEIs    s1 s2):xs) (Entry t d e i r) = construct xs (Entry t d e ((s1,s2):i) r)
+construct ((PEDef   s1 s2):xs) (Entry t d e i r) = construct xs (Entry t (d ++ [(s1,s2)]) e i r)
+construct ((PEEqn   s1 s2):xs) (Entry t d e i r) = construct xs (Entry t d (e ++ [(s1,s2)]) i r)
+construct ((PEIs    s1 s2):xs) (Entry t d e i r) = construct xs (Entry t d e (i ++ [(s1,s2)]) r)
 
 emp = Entry ("","") [] [] [] []
 
