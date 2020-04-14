@@ -13,15 +13,8 @@ The script will not work on windows
 When it is completed, you will simply run `OpenBook [filename]` where the file is
 a store of all the data you might want to look up in the exam.
 
-When the app is running, 'ESC' closes the app, type to search and arrow keys to select a hit.
-searching can be more focused with the following rules (Not yet implmented):
-- Typing anything will simply search through names of the entries.
-- `def text` will search for definitions
-- `eqn text` will search for equations relating to text
-- `opt text` will search for options, for example, in a computer security exam `opt attacks` would give me the definitions of differnt type of cyber attack
-- `txt text` will search the body of data entries
-- `reg text` will do the same but text is a regular expression
-All searches are case insensitive
+- When the app is running, 'ESC' closes the app, type to search and arrow keys to select a hit.
+- Clicking on "See also" or "related" section will jump there
 
 ## Inputing data
 Data is input in `.ob` files. Here is an example file:

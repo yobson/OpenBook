@@ -1,23 +1,28 @@
 {-# LANGUAGE FlexibleInstances #-}
 
-module Search (getResults, getIName, getIData, Info) where
+module Search (getResults, getIName, getIData, Info, ButtonType(..)) where
 
+import Brick
 import Parser (Entry(..))
 import Data.Char (toUpper)
 
 type Info = Entry
+data ButtonType = Extern String | Intern String deriving (Eq, Ord)
 
-getIName, getIData :: Info -> String
 getIName = fst . eTitle
-getIData i = concat [printSegment "" (eTitle i)
-                    , concatMap (printSegment "Definition") (eDef i)
-                    , concatMap (printSegment "Equation")   (eEqn i)
-                    , concatMap (printSegment "See also")   (eIs i)
-                    , concatMap (printSegment "Related")   (eRel i)
+
+getIData :: Info -> Widget ButtonType
+getIData i = vBox   [printSegment "" (eTitle i)
+                    , vBox $ map (printSegment "Definition") (eDef i)
+                    , vBox $ map (printSegment "Equation")   (eEqn i)
+                    , vBox $ map (printSegment "See also")   (eIs i)
+                    , vBox $ map (printSegment "Related")   (eRel i)
                     ]
 
-printSegment :: String -> (String, String) -> String
-printSegment title (h,b) = concat ["# ", title, if title == "" then "" else ": ", h, "\n", b, "\n\n"]
+printSegment :: String -> (String, String) -> Widget ButtonType
+printSegment title@"See also" (h,b) = clickable (Intern h) $ str $ concat ["# ", title, if title == "" then "" else ": ", h, "\n", b, "\n\n"]
+printSegment title@"Related"  (h,b) = clickable (Intern h) $ str $ concat ["# ", title, if title == "" then "" else ": ", h, "\n", b, "\n\n"]
+printSegment title (h,b)            = str $ concat ["# ", title, if title == "" then "" else ": ", h, "\n", b, "\n\n"]
 
 data RankPred a = Pred (a -> Bool) | (RankPred a) :|: (RankPred a) | Not (RankPred a)
 
@@ -62,4 +67,5 @@ findRelated xs (Entry t d e i r) = Entry t d e i (map out $ filter (\y -> (fst $
 
 
 getResults :: [Info] -> String -> [Info]
+getResults xs "*" = map (findRelated xs) xs
 getResults xs s = map (findRelated xs) (filterRanked (buildPreds [beginsWith s. getIName, contains s . getIName]) xs)
