@@ -15,6 +15,7 @@ a store of all the data you might want to look up in the exam.
 
 - When the app is running, 'ESC' closes the app, type to search and arrow keys to select a hit.
 - Clicking on "See also" or "related" section will jump there
+- On MacOS Only, clicking on a "File : " section will open the file in QuickLook
 
 ## Inputing data
 Data is input in `.ob` files. Here is an example file:
@@ -47,7 +48,17 @@ type M a = (a -> Ans) -> Ans
 result x k = k x 
 
 (x $> f) k = x (\x -> f x k)
+
+#file LaTeXed Formula
+/Users/James/formula.png
 ```
+
+## Getting file support working on linux
+In `src/Main.hs` (as of writing line 72) there is a line that looks like this:
+```haskell
+handleEvent entries s (MouseDown (Extern path) button mods coords) = (liftIO $ spawnCommand ("qlmanage -p " ++ path ++ " >& /dev/null")) >> continue s
+```
+swap out `qlmanage -p` with whatever file opening command you want!
 
 ## TODO List
 - [X] Build UI

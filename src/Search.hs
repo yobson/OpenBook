@@ -17,11 +17,13 @@ getIData i = vBox   [printSegment "" (eTitle i)
                     , vBox $ map (printSegment "Equation")   (eEqn i)
                     , vBox $ map (printSegment "See also")   (eIs i)
                     , vBox $ map (printSegment "Related")   (eRel i)
+                    , vBox $ map (printSegment "Link")      (eFile i)
                     ]
 
 printSegment :: String -> (String, String) -> Widget ButtonType
-printSegment title@"See also" (h,b) = clickable (Intern h) $ str $ concat ["# ", title, if title == "" then "" else ": ", h, "\n", b, "\n\n"]
-printSegment title@"Related"  (h,b) = clickable (Intern h) $ str $ concat ["# ", title, if title == "" then "" else ": ", h, "\n", b, "\n\n"]
+printSegment title@"See also" (h,b) = clickable (Intern h) $ str $ concat ["# ", title, ": ", h, "\n", b, "\n\n"]
+printSegment title@"Related"  (h,b) = clickable (Intern h) $ str $ concat ["# ", title, ": ", h, "\n", b, "\n\n"]
+printSegment title@"Link"     (h,b) = clickable (Extern b) $ str $ concat ["# File: ", h, "\n\n"]
 printSegment title (h,b)            = str $ concat ["# ", title, if title == "" then "" else ": ", h, "\n", b, "\n\n"]
 
 data RankPred a = Pred (a -> Bool) | (RankPred a) :|: (RankPred a) | Not (RankPred a)
@@ -57,7 +59,7 @@ contains (x:xs) (y:ys) | x === y    = beginsWith xs ys || contains (x:xs) ys
  
 
 findRelated :: [Info] -> Info -> Info
-findRelated xs (Entry t d e i r) = Entry t d e i (map out $ filter (\y -> (fst $ t) == mid y ) (concatMap buildTriple xs))
+findRelated xs (Entry t d e i r f) = Entry t d e i (map out $ filter (\y -> (fst $ t) == mid y ) (concatMap buildTriple xs)) f
   where buildTriple :: Info -> [(String,String,String)]
         buildTriple info = map (\(x,y) -> (fst $ eTitle info, x, y)) (eIs info)
         mid (a,b,c) = b
