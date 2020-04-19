@@ -10,7 +10,7 @@ cabal v2-build
 The script will not work on windows
 
 ## Demo
-### Input multiple file and fast search
+### Input multiple file and fast search (gif play-back is ironically slow)
 ![Search Demo](Demo1.gif)
 ### Mouse and Unicode Support
 ![Mouse Demo](Demo2.gif)
