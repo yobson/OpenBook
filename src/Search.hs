@@ -21,6 +21,8 @@ getIData i = vBox   [printSegment "" (eTitle i)
                     ]
 
 printSegment :: String -> (String, String) -> Widget ButtonType
+printSegment title@"See also" (h,"-") = clickable (Intern h) $ str $ concat ["# ", title, ": ", h, "\n\n"]
+printSegment title@"Related"  (h,"-") = clickable (Intern h) $ str $ concat ["# ", title, ": ", h, "\n\n"]
 printSegment title@"See also" (h,b) = clickable (Intern h) $ str $ concat ["# ", title, ": ", h, "\n", b, "\n\n"]
 printSegment title@"Related"  (h,b) = clickable (Intern h) $ str $ concat ["# ", title, ": ", h, "\n", b, "\n\n"]
 printSegment title@"Link"     (h,b) = clickable (Extern b) $ str $ concat ["# File: ", h, "\n\n"]

@@ -9,6 +9,14 @@ cabal v2-build
 ```
 The script will not work on windows
 
+## Demo
+### Input multiple file and fast search
+![Search Demo](Demo1.gif)
+### Mouse and Unicode Support
+![Mouse Demo](Demo2.gif)
+### Picture support on Mac OS (and linux if you change a line of code)
+![Pics Demo](Demo3.gif)
+
 ## Usage
 When it is completed, you will simply run `OpenBook [filename]` where the file is
 a store of all the data you might want to look up in the exam.
