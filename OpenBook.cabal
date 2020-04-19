@@ -21,7 +21,7 @@ executable OpenBook
   main-is:             Main.hs
   other-modules:       Parser, Lexer, Search
   -- other-extensions:
-  build-depends:       base ^>=4.12.0.0
+  build-depends:       base ^>=4.9.0.0
                      , brick
                      , vty
                      , text
@@ -29,6 +29,6 @@ executable OpenBook
                      , process
 
   hs-source-dirs:      src
-  ghc-options:         -threaded -fllvm
+  ghc-options:         -threaded
   build-tools:         alex, happy
   default-language:    Haskell2010
