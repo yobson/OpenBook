@@ -21,7 +21,7 @@ executable OpenBook
   main-is:             Main.hs
   other-modules:       Parser, Lexer, Search
   -- other-extensions:
-  build-depends:       base ^>=4.9.0.0
+  build-depends:       base >=4.9.0.0
                      , brick
                      , vty
                      , text
